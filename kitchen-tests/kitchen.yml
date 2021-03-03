@@ -22,18 +22,21 @@ lifecycle:
     - remote: /opt/chef/bin/ohai -v
     - remote: /opt/chef/embedded/bin/gem install appbundler appbundle-updater --no-doc
     - remote: /opt/chef/embedded/bin/appbundle-updater chef ohai <%= File.readlines('../Gemfile.lock', File.expand_path(File.dirname(__FILE__))).find { |l| l =~ /^\s+ohai \((\d+\.\d+\.\d+)\)/ }; 'v' + $1 %> --tarball --github chef/ohai
-      exclude: centos-6
+      exclude:
+        - centos-6
     - remote: /opt/chef/embedded/bin/appbundle-updater chef chef <%= ENV['BUILDKITE_COMMIT']  || %x(git rev-parse HEAD).chomp %> --tarball --github chef/chef
-      exclude: centos-6
+      exclude:
+        - centos-6
     - remote: echo "/opt/chef/embedded/bin/appbundle-updater chef ohai <%= File.readlines('../Gemfile.lock', File.expand_path(File.dirname(__FILE__))).find { |l| l =~ /^\s+ohai \((\d+\.\d+\.\d+)\)/ }; 'v' + $1 %> --tarball --github chef/ohai" | scl enable devtoolset-8
-      include: centos-6
+      include:
+        - centos-6
     - remote: echo "/opt/chef/embedded/bin/appbundle-updater chef chef <%= ENV['BUILDKITE_COMMIT']  || %x(git rev-parse HEAD).chomp %> --tarball --github chef/chef" | scl enable devtoolset-8
-      include: centos-6
+      include:
+        - centos-6
     - remote: echo "Installed Chef / Ohai release:"
     - remote: /opt/chef/bin/chef-client -v
     - remote: /opt/chef/bin/ohai -v
 
-      - RUN scl enable devtoolset-8 bash
 verifier:
   name: inspec
   format: progress
